@@ -2,17 +2,13 @@
 services:
   fastapi-backend:
     container_name: "deploy_01-backend"
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: captwhite/backend:latest
     networks:
       - webnet
 
   vite-react-tw-frontend:
     container_name: "deploy_01-frontend"
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: captwhite/frontend:latest
     ports:
       - 8080:8080
     labels:
