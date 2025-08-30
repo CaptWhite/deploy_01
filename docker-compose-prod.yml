@@ -2,13 +2,13 @@
 services:
   fastapi-backend:
     container_name: "deploy_01-backend"
-    image: captwhite/backend:latest
+    image: captwhite/deploy_01-backend:latest
     networks:
-      - webnet
+      - webnet-deploy_01
 
   vite-react-tw-frontend:
     container_name: "deploy_01-frontend"
-    image: captwhite/frontend:latest
+    image: captwhite/deploy_01-frontend:latest
     ports:
       - 8080:8080
     labels:
@@ -24,8 +24,9 @@ services:
       - "traefik.http.routers.deploy_01.tls.certresolver=myresolver"
       - "traefik.http.services.deploy_01.loadbalancer.server.port=8080"
     networks:
-      - webnet
+      - webnet-deploy_01
+
 
 networks:
-  webnet:
+  webnet-deploy_01:
     external: true
