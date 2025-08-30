@@ -1,0 +1,35 @@
+
+services:
+  fastapi-backend:
+    container_name: "deploy_01-backend"
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - webnet
+
+  vite-react-tw-frontend:
+    container_name: "deploy_01-frontend"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.deploy_01-http.entrypoints=web"
+      - "traefik.http.routers.deploy_01-http.rule=Host(`deploy_01.captwhite.com`)"
+      - "traefik.http.routers.deploy_01-http.middlewares=redirect-to-https@docker"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      #
+      - "traefik.http.routers.deploy_01.entrypoints=websecure"
+      - "traefik.http.routers.deploy_01.rule=Host(`deploy_01.captwhite.com`)"
+      - "traefik.http.routers.deploy_01.tls=true"
+      - "traefik.http.routers.deploy_01.tls.certresolver=myresolver"
+      - "traefik.http.services.deploy_01.loadbalancer.server.port=8080"
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    external: true
