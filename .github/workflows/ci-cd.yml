@@ -103,8 +103,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      # Nuevo paso: Sincronizar solo el archivo de Docker Compose
+      - name: Sync docker-compose.yml file to VPS
+        env:
+          HOST: ${{ secrets.SSH_HOST }}
+          USER: ${{ secrets.SSH_USER }}
+        run: |
+          scp -o StrictHostKeyChecking=no ./docker-compose-prod.yml $USER@$HOST:/home/$USER/workspaces/deploy_01/docker-compose-prod.yml
 
-      # Paso 3: Desplegar 
+      # Paso 4: Desplegar 
       - name: Deploy to VPSs
         env:
           HOST: ${{ secrets.SSH_HOST }}
